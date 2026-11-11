@@ -1,0 +1,1678 @@
+/* ==========================================================================
+   FOR MUSKAN - APP-LIKE MULTI-PAGE DIGITAL GIFT EXPERIENCE
+   Vibe: Warm, Emotional, Soft Pink, Deep Magenta & Wine Glow
+   7-Screen Architecture:
+   Screen 1: Heart & Arrow
+   Screen 2: Tree of Love
+   Screen 3: Confession
+   Screen 4: Photo Collage & Puzzle
+   Screen 5: The Letters
+   Screen 6: "Unlock for Surprise" Passcode Lock Screen
+   Screen 7: Grand Finale (Lightning & Fireworks)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. COLOR VARIABLES & THEME SETUP
+   -------------------------------------------------------------------------- */
+:root {
+  /* Soft & Warm Pinks */
+  --blush-cream: #fff7f7;
+  --blush-light: #fde8ed;
+  --blush-pink: #fbcfe8;
+  --soft-pink: #f472b6;
+  --hot-pink: #ec4899;
+  
+  /* Deep Magentas & Wine */
+  --magenta-deep: #be185d;
+  --wine-dark: #831843;
+  --wine-rich: #701a75;
+  --wine-midnight: #4a044e;
+
+  /* Pastel Theme (Screen 6) */
+  --pastel-purple: #ede9fe;
+  --pastel-purple-deep: #7e22ce;
+  --pastel-yellow: #fef9c3;
+  --retro-purple: #6b21a8;
+
+  /* Warm Sunsets & Golds */
+  --sunset-peach: #fecdd3;
+  --sunset-gold: #fde68a;
+  --warm-amber: #fbbf24;
+
+  /* Typography */
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-cursive: 'Dancing Script', 'Alex Brush', cursive;
+  --font-hand: 'Caveat', cursive;
+  --font-retro: 'Shrikhand', 'Fredoka', cursive, sans-serif;
+
+  /* Easing */
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* --------------------------------------------------------------------------
+   2. RESET & APP VIEWPORT LOCK (STRICTLY NON-SCROLLING)
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  background-color: var(--blush-cream);
+  font-family: var(--font-sans);
+  color: #1f2937;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+/* Fixed App Shell */
+.app-viewport {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Floating Audio Toggle */
+.app-sound-btn {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(244, 114, 182, 0.4);
+  border-radius: 30px;
+  box-shadow: 0 4px 15px rgba(244, 114, 182, 0.2);
+  cursor: pointer;
+  transition: all 0.25s var(--ease-smooth);
+}
+
+.app-sound-btn:hover {
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.sound-waves {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 14px;
+}
+
+.sound-waves span {
+  width: 2.5px;
+  height: 4px;
+  background: var(--hot-pink);
+  border-radius: 2px;
+}
+
+.app-sound-btn.playing .sound-waves span:nth-child(1) { animation: barDance 1.2s infinite ease-in-out; }
+.app-sound-btn.playing .sound-waves span:nth-child(2) { animation: barDance 0.9s infinite ease-in-out 0.2s; }
+.app-sound-btn.playing .sound-waves span:nth-child(3) { animation: barDance 1.4s infinite ease-in-out 0.4s; }
+
+@keyframes barDance {
+  0%, 100% { height: 3px; }
+  50% { height: 14px; }
+}
+
+.sound-icon { font-size: 0.95rem; }
+
+/* Cross-Screen FX Canvas */
+#fx-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5000;
+}
+
+/* White Screen Flash Transition */
+.white-screen-flash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #ffffff;
+  z-index: 99999;
+  pointer-events: none;
+  animation: flashScreen 0.8s ease-out forwards;
+}
+
+@keyframes flashScreen {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Top Progress Dots (7 Steps) */
+.app-progress-bar {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 7px;
+  z-index: 1000;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.prog-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(244, 114, 182, 0.35);
+  transition: all 0.4s var(--ease-spring);
+}
+
+.prog-dot.active {
+  width: 18px;
+  border-radius: 4px;
+  background: var(--hot-pink);
+  box-shadow: 0 0 10px rgba(236, 72, 153, 0.45);
+}
+
+/* --------------------------------------------------------------------------
+   3. DISCRETE SCREEN ARCHITECTURE (NO SCROLLING)
+   -------------------------------------------------------------------------- */
+.app-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.96);
+  transition: opacity 0.6s var(--ease-smooth), transform 0.6s var(--ease-smooth);
+  overflow: hidden;
+}
+
+.app-screen.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+  z-index: 10;
+}
+
+.screen-content {
+  position: relative;
+  width: 100%;
+  max-width: 650px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 40px 0 20px 0;
+}
+
+/* Universal Screen Buttons */
+.screen-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 34px;
+  background: linear-gradient(135deg, var(--soft-pink) 0%, var(--magenta-deep) 100%);
+  border: none;
+  border-radius: 40px;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  box-shadow: 0 10px 25px rgba(219, 39, 119, 0.35);
+  cursor: pointer;
+  transition: all 0.3s var(--ease-spring);
+}
+
+.screen-action-btn:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 14px 30px rgba(219, 39, 119, 0.5);
+}
+
+.screen-action-btn:active {
+  transform: scale(0.97);
+}
+
+/* --------------------------------------------------------------------------
+   4. SCREEN 1: THE INTERACTIVE HEART & ARROW
+   -------------------------------------------------------------------------- */
+.screen-1 {
+  background: radial-gradient(circle at 50% 30%, #ffffff 0%, var(--blush-cream) 45%, var(--blush-pink) 100%);
+}
+
+.heart-stage {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 15vh;
+}
+
+.heart-ambient-glow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(244, 114, 182, 0.45) 0%, transparent 70%);
+  filter: blur(25px);
+  animation: pulseAmbient 3s infinite alternate ease-in-out;
+}
+
+@keyframes pulseAmbient {
+  0% { transform: scale(0.9); opacity: 0.5; }
+  100% { transform: scale(1.3); opacity: 0.9; }
+}
+
+.glossy-heart {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: floatHeart 3.2s infinite ease-in-out;
+}
+
+@keyframes floatHeart {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-12px) scale(1.05); }
+}
+
+.heart-3d-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 14px 28px rgba(219, 39, 119, 0.35));
+}
+
+.heart-initial {
+  position: absolute;
+  font-family: var(--font-serif);
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 2px 6px rgba(157, 23, 77, 0.5);
+}
+
+/* Bow & Arrow Launcher Area */
+.bow-area {
+  position: relative;
+  width: 280px;
+  height: 190px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 25px;
+  cursor: grab;
+}
+
+.bow-svg-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 140px;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.arrow-actor {
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  touch-action: none;
+  z-index: 20;
+}
+
+.arrow-head {
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 15px solid var(--magenta-deep);
+  filter: drop-shadow(0 0 5px rgba(219, 39, 119, 0.5));
+}
+
+.arrow-body {
+  width: 3.5px;
+  height: 75px;
+  background: linear-gradient(180deg, var(--magenta-deep) 0%, var(--soft-pink) 100%);
+  border-radius: 2px;
+}
+
+.arrow-feather {
+  width: 12px;
+  height: 10px;
+  background: var(--soft-pink);
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+.pull-cue {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-top: 14px;
+}
+
+.cue-text {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--wine-dark);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.cue-arrow {
+  color: var(--soft-pink);
+  font-size: 1.1rem;
+  animation: bounceCue 1.5s infinite;
+}
+
+@keyframes bounceCue {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+/* --------------------------------------------------------------------------
+   5. SCREEN 2: THE TREE OF LOVE (HEART-LEAF CANOPY)
+   -------------------------------------------------------------------------- */
+.screen-2 {
+  background: radial-gradient(circle at 50% 40%, #fff1f2 0%, #fde2e4 50%, var(--sunset-peach) 100%);
+}
+
+.tree-screen-content {
+  justify-content: center;
+}
+
+.tree-container {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  height: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#heart-tree-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.tree-typography {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.fade-phrase {
+  font-family: var(--font-cursive);
+  font-size: clamp(1.4rem, 3.8vw, 2rem);
+  color: var(--wine-dark);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.8s var(--ease-smooth);
+}
+
+.fade-phrase.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.phrase-2 {
+  font-size: clamp(1.8rem, 4.5vw, 2.4rem);
+  font-weight: 700;
+  color: var(--magenta-deep);
+}
+
+.tree-typography .screen-action-btn {
+  margin-top: 18px;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: all 0.5s var(--ease-spring);
+}
+
+.tree-typography .screen-action-btn.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* --------------------------------------------------------------------------
+   6. SCREEN 3: THE CINEMATIC CONFESSION (DEEP MAGENTA / WINE)
+   -------------------------------------------------------------------------- */
+.screen-3 {
+  background: radial-gradient(circle at 50% 45%, var(--wine-rich) 0%, var(--wine-dark) 45%, var(--wine-midnight) 100%);
+  color: #ffffff;
+}
+
+.confession-screen-content {
+  justify-content: center;
+}
+
+.confession-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 20px;
+}
+
+.confession-intro {
+  font-family: var(--font-hand);
+  font-size: clamp(1.6rem, 4vw, 2.2rem);
+  color: var(--sunset-peach);
+  margin-bottom: 24px;
+  opacity: 0;
+  transform: translateY(15px);
+  animation: fadeInDown 1.2s var(--ease-smooth) 0.3s forwards;
+}
+
+.sweeping-love {
+  font-family: var(--font-cursive);
+  font-size: clamp(3.6rem, 11vw, 6.8rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: #ffffff;
+  text-shadow: 0 0 35px rgba(244, 114, 182, 0.7), 0 0 70px rgba(219, 39, 119, 0.45);
+  margin-bottom: 24px;
+  opacity: 0;
+  transform: scale(0.9);
+  animation: bloomLove 1.8s var(--ease-spring) 0.8s forwards;
+}
+
+@keyframes bloomLove {
+  0% { opacity: 0; transform: scale(0.85); filter: blur(10px); }
+  100% { opacity: 1; transform: scale(1); filter: blur(0); }
+}
+
+@keyframes fadeInDown {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.confession-subtitle {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 300;
+  margin-bottom: 42px;
+  opacity: 0;
+  animation: fadeInDown 1.2s var(--ease-smooth) 1.4s forwards;
+}
+
+.wine-btn {
+  background: linear-gradient(135deg, var(--soft-pink) 0%, #ffffff 100%);
+  color: var(--wine-midnight) !important;
+  font-weight: 700;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  animation: fadeInDown 1.2s var(--ease-smooth) 1.8s forwards;
+}
+
+.wine-btn:hover {
+  box-shadow: 0 14px 40px rgba(244, 114, 182, 0.6);
+}
+
+/* --------------------------------------------------------------------------
+   7. SCREEN 4: THE PHOTO COLLAGE & PUZZLE (8 REAL PHOTOS)
+   -------------------------------------------------------------------------- */
+.screen-4 {
+  background: radial-gradient(circle at 50% 30%, #ffffff 0%, var(--blush-cream) 55%, var(--blush-light) 100%);
+}
+
+.collage-screen-content {
+  justify-content: flex-start;
+  padding-top: 60px;
+}
+
+.collage-header {
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.mini-tag {
+  display: inline-block;
+  padding: 4px 14px;
+  background: rgba(244, 114, 182, 0.2);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--wine-dark);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.screen-heading {
+  font-family: var(--font-serif);
+  font-size: clamp(1.8rem, 4vw, 2.3rem);
+  color: var(--wine-midnight);
+  margin-bottom: 4px;
+}
+
+.collage-instruction {
+  font-size: 0.88rem;
+  color: #6b7280;
+}
+
+/* Polaroids Grid Stage */
+.polaroids-stage {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  width: 100%;
+  max-width: 540px;
+  margin: 10px auto;
+  perspective: 1000px;
+}
+
+@media (max-width: 520px) {
+  .polaroids-stage {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+}
+
+.polaroid-flip-card {
+  aspect-ratio: 1 / 1.25;
+  cursor: pointer;
+  perspective: 800px;
+  transition: transform 0.4s var(--ease-spring);
+}
+
+.polaroid-flip-card:hover {
+  transform: translateY(-4px) scale(1.04);
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.polaroid-flip-card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+/* Card Back (Facedown State) */
+.card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  background: linear-gradient(135deg, var(--blush-light) 0%, var(--blush-pink) 100%);
+  border: 2px dashed rgba(244, 114, 182, 0.5);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.lock-heart { font-size: 1.4rem; color: var(--hot-pink); }
+.card-num { font-size: 0.75rem; font-weight: 700; color: var(--wine-dark); margin-top: 4px; }
+
+/* Card Front (Revealed Polaroid Photo) */
+.card-front {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
+  background: #ffffff;
+  padding: 6px 6px 16px 6px;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card-photo {
+  width: 100%;
+  height: 76%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.card-caption {
+  font-family: var(--font-hand);
+  font-size: 0.85rem;
+  color: #374151;
+  text-align: center;
+  margin-top: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  font-weight: 700;
+}
+
+.collage-footer {
+  margin-top: 14px;
+  display: flex;
+  gap: 12px;
+}
+
+.reveal-all-btn {
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(244, 114, 182, 0.4);
+  border-radius: 30px;
+  color: var(--wine-dark);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.reveal-all-btn:hover {
+  background: #ffffff;
+  box-shadow: 0 4px 15px rgba(244, 114, 182, 0.25);
+}
+
+.primary-glow-btn {
+  animation: glowPulse 2s infinite alternate;
+}
+
+@keyframes glowPulse {
+  0% { box-shadow: 0 0 15px rgba(236, 72, 153, 0.4); }
+  100% { box-shadow: 0 0 28px rgba(236, 72, 153, 0.7); }
+}
+
+.hidden { display: none !important; }
+
+/* Lightbox Modal */
+.photo-lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeInModal 0.25s var(--ease-smooth);
+}
+
+@keyframes fadeInModal {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.lightbox-backdrop {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(14, 7, 34, 0.82);
+  backdrop-filter: blur(8px);
+}
+
+.lightbox-card {
+  position: relative;
+  z-index: 2;
+  background: #ffffff;
+  padding: 12px 12px 20px 12px;
+  border-radius: 16px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+  max-width: 90vw;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: zoomLightbox 0.3s var(--ease-spring);
+}
+
+@keyframes zoomLightbox {
+  0% { transform: scale(0.85); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.lightbox-img {
+  max-width: 82vw;
+  max-height: 65vh;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.lightbox-caption {
+  font-family: var(--font-hand);
+  font-size: 1.3rem;
+  color: #1f2937;
+  margin-top: 12px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #374151;
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+/* --------------------------------------------------------------------------
+   8. SCREEN 5: THE LETTER & SURPRISE UNLOCK (THE BRIDGE SCREEN)
+   -------------------------------------------------------------------------- */
+.screen-5 {
+  /* Very soft, pale pink background */
+  background: radial-gradient(circle at 50% 35%, #ffffff 0%, #fff1f4 55%, #fde8ed 100%);
+}
+
+.letters-screen-content {
+  justify-content: center;
+  max-width: 640px;
+}
+
+/* Card Header: Just above the white card */
+.letter-top-badge {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--wine-dark);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+/* Floating White Card UI with Soft Drop Shadow */
+.letters-card-viewport {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  min-height: 250px;
+  background: #ffffff;
+  border-radius: 28px;
+  padding: 24px 26px 18px 26px;
+  box-shadow: 0 20px 50px rgba(244, 114, 182, 0.18), 0 4px 18px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(244, 114, 182, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* Subtitle inside card at top */
+.letter-badge-step {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--hot-pink);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+
+.letter-text-wrapper {
+  width: 100%;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  max-height: clamp(190px, 44dvh, 390px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin: 6px 0 14px 0;
+  padding: 4px 10px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(244, 114, 182, 0.45) transparent;
+}
+
+.letter-text-wrapper::-webkit-scrollbar {
+  width: 5px;
+}
+
+.letter-text-wrapper::-webkit-scrollbar-thumb {
+  background: rgba(244, 114, 182, 0.45);
+  border-radius: 10px;
+}
+
+.letter-text-body {
+  margin: auto 0;
+  font-family: var(--font-serif);
+  font-size: clamp(0.92rem, 2.1vw, 1.06rem);
+  line-height: 1.65;
+  color: #374151;
+  font-weight: 400;
+  white-space: pre-line;
+  will-change: transform, opacity;
+}
+
+/* Card Navigation: INSIDE bottom of the white card */
+.letter-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 6px;
+}
+
+.letter-nav-arrow {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid rgba(244, 114, 182, 0.4);
+  color: var(--wine-dark);
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s var(--ease-spring);
+}
+
+.letter-nav-arrow:hover {
+  background: var(--soft-pink);
+  color: #ffffff;
+  transform: scale(1.08);
+}
+
+.letter-dots {
+  display: flex;
+  gap: 7px;
+}
+
+.letter-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(244, 114, 182, 0.35);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.letter-dot.active {
+  width: 20px;
+  border-radius: 4px;
+  background: var(--hot-pink);
+}
+
+/* Signature & Button (The Bridge) - Just below the white card */
+.bridge-footer-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-top: 16px;
+}
+
+.signature-red-cursive {
+  font-family: var(--font-cursive);
+  font-size: clamp(1.5rem, 3.8vw, 1.85rem);
+  color: #e11d48; /* Red cursive font */
+  margin-bottom: 14px;
+  text-shadow: 0 1px 8px rgba(225, 29, 72, 0.15);
+}
+
+.purple-pill-btn {
+  background: linear-gradient(135deg, #9333ea 0%, #7e22ce 100%) !important;
+  color: #ffffff !important;
+  border-radius: 50px !important;
+  padding: 14px 36px !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  box-shadow: 0 8px 25px rgba(126, 34, 206, 0.38) !important;
+  animation: glowPurplePill 2.4s infinite alternate;
+}
+
+@keyframes glowPurplePill {
+  0% { box-shadow: 0 8px 25px rgba(126, 34, 206, 0.35); }
+  100% { box-shadow: 0 12px 35px rgba(147, 51, 234, 0.6); }
+}
+
+/* --------------------------------------------------------------------------
+   9. SCREEN 6: THE "UNLOCK FOR SURPRISE" PASSCODE PAGE
+   -------------------------------------------------------------------------- */
+.screen-6 {
+  /* Alternating soft pastel purple and yellow vertical stripes */
+  background: repeating-linear-gradient(
+    90deg,
+    #ede9fe 0px,
+    #ede9fe 48px,
+    #fef9c3 48px,
+    #fef9c3 96px
+  );
+}
+
+.passcode-screen-content {
+  justify-content: center;
+  max-width: 850px;
+}
+
+.passcode-layout {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  width: 100%;
+}
+
+@media (max-width: 680px) {
+  .passcode-layout {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+/* Left Side: Photo Frame & Retro Heading */
+.passcode-left-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.retro-unlock-title {
+  font-family: var(--font-retro);
+  font-size: clamp(2rem, 5vw, 3rem);
+  color: var(--retro-purple);
+  text-shadow: 3px 3px 0px #ffffff, 5px 5px 0px rgba(107, 33, 168, 0.25);
+  line-height: 1.15;
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
+}
+
+/* Circular Scalloped (Wavy-Edged) Picture Frame */
+.scalloped-frame-wrapper {
+  position: relative;
+  width: 190px;
+  height: 190px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.scalloped-edge-border {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--retro-purple);
+  padding: 8px;
+  box-shadow: 0 12px 30px rgba(107, 33, 168, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Scalloped decorative ring */
+  outline: 6px dashed #ffffff;
+  outline-offset: 4px;
+  animation: floatScallop 4s infinite alternate ease-in-out;
+}
+
+@keyframes floatScallop {
+  0% { transform: scale(1) rotate(0deg); }
+  100% { transform: scale(1.03) rotate(2deg); }
+}
+
+.scalloped-photo-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid #ffffff;
+  background: #ffffff;
+}
+
+.scalloped-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Mascot Graphic */
+.vintage-mascot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: #ffffff;
+  border-radius: 20px;
+  border: 2px solid var(--retro-purple);
+  box-shadow: 0 4px 12px rgba(107, 33, 168, 0.15);
+}
+
+.party-cat-icon { font-size: 1.4rem; }
+.mascot-badge {
+  font-family: var(--font-retro);
+  font-size: 0.8rem;
+  color: var(--retro-purple);
+}
+
+/* Right Side: Keypad & Input Boxes */
+.passcode-right-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 4 Blank Square Input Boxes */
+.pin-display-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.pin-box {
+  width: 48px;
+  height: 48px;
+  background: #ffffff;
+  border: 3px solid var(--retro-purple);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--retro-purple);
+  box-shadow: 0 6px 15px rgba(107, 33, 168, 0.15);
+  transition: all 0.2s var(--ease-spring);
+}
+
+.pin-box.filled {
+  background: #fdf4ff;
+  border-color: var(--hot-pink);
+  transform: scale(1.08);
+  box-shadow: 0 8px 20px rgba(236, 72, 153, 0.3);
+}
+
+/* Shake Animation on Wrong PIN */
+.pin-display-row.shake-error {
+  animation: shakePin 0.45s ease-in-out;
+}
+
+@keyframes shakePin {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-12px); }
+  40%, 80% { transform: translateX(12px); }
+}
+
+/* Wavy Purple Border Digital Number Pad Card */
+.wavy-keypad-card {
+  background: #ffffff;
+  border: 4px solid var(--retro-purple);
+  border-radius: 32px;
+  padding: 20px 22px;
+  box-shadow: 0 16px 40px rgba(107, 33, 168, 0.22);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 260px;
+}
+
+.keypad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+
+.keypad-key {
+  aspect-ratio: 1;
+  background: #f5f3ff;
+  border: 2px solid var(--pastel-purple-deep);
+  border-radius: 16px;
+  font-family: var(--font-retro);
+  font-size: 1.35rem;
+  color: var(--retro-purple);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 0px var(--retro-purple);
+  transition: all 0.15s;
+}
+
+.keypad-key:hover {
+  background: #ede9fe;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0px var(--retro-purple);
+}
+
+.keypad-key:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0px var(--retro-purple);
+}
+
+.key-symbol {
+  font-size: 1.5rem;
+  color: var(--hot-pink);
+}
+
+.keypad-action-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  margin-top: 14px;
+}
+
+.keypad-action-btn {
+  flex: 1;
+  padding: 10px 0;
+  border-radius: 16px;
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border: 2px solid var(--retro-purple);
+  transition: all 0.15s;
+}
+
+.delete-btn {
+  background: #fdf2f8;
+  color: var(--magenta-deep);
+  box-shadow: 0 3px 0px var(--magenta-deep);
+}
+
+.delete-btn:hover { background: #fce7f3; }
+.delete-btn:active { transform: translateY(2px); box-shadow: none; }
+
+.enter-btn {
+  background: var(--retro-purple);
+  color: #ffffff;
+  box-shadow: 0 3px 0px #4c1d95;
+}
+
+.enter-btn:hover { background: #581c87; }
+.enter-btn:active { transform: translateY(2px); box-shadow: none; }
+
+.passcode-hint-text {
+  font-size: 0.8rem;
+  color: var(--retro-purple);
+  font-weight: 600;
+  margin-top: 12px;
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   10. SCREEN 7: THE CAKE CUTTING EXPERIENCE
+   -------------------------------------------------------------------------- */
+.screen-7 {
+  /* Warm festive backdrop */
+  background: radial-gradient(circle at 50% 40%, #fff7ed 0%, #fef3c7 40%, #fed7aa 80%, #fbcfe8 100%);
+}
+
+.cake-cutting-content {
+  justify-content: center;
+  max-width: 600px;
+}
+
+.cake-cut-header {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.cake-cut-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.8rem, 4.5vw, 2.4rem);
+  color: var(--wine-midnight);
+  margin-bottom: 4px;
+}
+
+.cake-cut-hint {
+  font-size: 0.92rem;
+  color: var(--wine-dark);
+  font-weight: 500;
+}
+
+/* Interactive Cake Stage */
+.cake-interactive-stage {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+  height: 330px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: crosshair;
+  touch-action: none;
+  margin: 10px 0;
+}
+
+/* Knife Follower */
+.virtual-knife-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  font-size: 2.2rem;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
+  transition: opacity 0.2s;
+  z-index: 50;
+  opacity: 0;
+}
+
+.cake-interactive-stage:hover .virtual-knife-cursor {
+  opacity: 1;
+}
+
+.cake-cutting-wrap {
+  position: relative;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Cake Plate */
+.cake-cut-plate {
+  position: absolute;
+  bottom: -14px;
+  width: 290px;
+  height: 20px;
+  background: linear-gradient(180deg, #fbcfe8 0%, #db2777 70%, #9d174d 100%);
+  border-radius: 50%;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  z-index: 1;
+}
+
+/* Cake Tiers */
+.cake-cut-tier {
+  position: relative;
+  border-radius: 12px 12px 4px 4px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+  z-index: 2;
+  transition: transform 0.5s var(--ease-spring);
+}
+
+.tier-3 {
+  width: 230px;
+  height: 70px;
+  background: linear-gradient(180deg, #fce7f3 0%, #f472b6 45%, #db2777 100%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  margin-top: -6px;
+}
+
+.tier-3 .frosting-strip {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 10px;
+  background: #ffffff;
+  border-radius: 6px;
+  opacity: 0.9;
+}
+
+.pearl-garland {
+  position: absolute;
+  bottom: 6px;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.pearl-garland span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--sunset-gold);
+  box-shadow: 0 0 5px rgba(253, 230, 138, 0.8);
+}
+
+.tier-2 {
+  width: 175px;
+  height: 62px;
+  background: linear-gradient(180deg, #ede9fe 0%, #c084fc 45%, #9333ea 100%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  margin-top: -6px;
+}
+
+.frosting-drips {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.frosting-drips span {
+  width: 16px;
+  height: 18px;
+  background: #ffffff;
+  border-radius: 0 0 8px 8px;
+}
+
+.tier-1 {
+  width: 120px;
+  height: 54px;
+  background: linear-gradient(180deg, #fef9c3 0%, #fde047 50%, #f59e0b 100%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  overflow: visible;
+}
+
+.fresh-strawberries {
+  position: absolute;
+  top: -12px;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  font-size: 1rem;
+}
+
+/* Sliced Piece Visual */
+.cut-slice-piece {
+  position: absolute;
+  right: 15px;
+  top: 0;
+  width: 38px;
+  height: 100%;
+  background: repeating-linear-gradient(45deg, #fbcfe8, #fbcfe8 4px, #ffffff 4px, #ffffff 8px);
+  border-left: 2px dashed #e11d48;
+  border-radius: 0 10px 4px 0;
+  opacity: 0;
+  transition: all 0.6s var(--ease-spring);
+  transform-origin: bottom right;
+}
+
+.cake-cut-tier.sliced .cut-slice-piece {
+  opacity: 1;
+  transform: translate(18px, -6px) rotate(8deg);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+}
+
+/* Slicing Laser Guideline */
+.slice-guideline {
+  position: absolute;
+  top: 0;
+  left: 60%;
+  width: 2px;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.slice-laser {
+  width: 2px;
+  height: 0%;
+  background: #ffffff;
+  box-shadow: 0 0 12px #ec4899, 0 0 20px #fbbf24;
+  transition: height 0.3s ease-out;
+}
+
+/* Candle on Cake */
+.cake-candle-cluster {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cut-candle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cut-candle-body {
+  width: 8px;
+  height: 32px;
+  background: repeating-linear-gradient(45deg, #ffffff, #ffffff 3px, #f472b6 3px, #f472b6 6px);
+  border-radius: 2px;
+}
+
+.cut-wick { width: 2px; height: 6px; background: #333333; }
+
+.cut-flame {
+  position: relative;
+  width: 10px;
+  height: 18px;
+  margin-bottom: 2px;
+  animation: flameWaver 1.2s infinite alternate ease-in-out;
+}
+
+.cut-flame-core {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, #ffffff 0%, #fef08a 30%, #f97316 75%, #ef4444 100%);
+  border-radius: 50% 50% 35% 35% / 60% 60% 40% 40%;
+  box-shadow: 0 0 10px #fef08a, 0 0 20px #f97316;
+}
+
+.cut-flame-halo {
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(254, 240, 138, 0.4) 0%, transparent 70%);
+}
+
+@keyframes flameWaver {
+  0% { transform: scale(1) rotate(-1deg); }
+  100% { transform: scale(1.06, 0.95) rotate(2deg); }
+}
+
+.slice-prompt-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 8px 20px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
+  border-radius: 30px;
+  border: 1px solid rgba(244, 114, 182, 0.4);
+}
+
+.slice-drag-hand {
+  font-size: 1.2rem;
+  animation: handSlice 1.8s infinite ease-in-out;
+}
+
+@keyframes handSlice {
+  0% { transform: translateX(-15px) translateY(-10px); }
+  50% { transform: translateX(15px) translateY(10px); }
+  100% { transform: translateX(-15px) translateY(-10px); }
+}
+
+.slice-prompt-text {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--wine-dark);
+}
+
+/* --------------------------------------------------------------------------
+   11. SCREEN 8: THE GRAND FINALE (GLOWING LETTER CARD)
+   -------------------------------------------------------------------------- */
+.screen-8 {
+  background: #03010b;
+  color: #ffffff;
+  position: relative;
+}
+
+#fireworks-lightning-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.finale-screen-content {
+  position: relative;
+  z-index: 10;
+  justify-content: center;
+  max-width: 660px;
+  padding: 20px 14px;
+}
+
+/* Large Dark Card with Subtle Warm Glowing Border */
+.grand-finale-card {
+  background: rgba(14, 7, 34, 0.85);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(251, 191, 36, 0.45);
+  border-radius: 32px;
+  padding: clamp(26px, 5.5vw, 44px);
+  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.85), 0 0 45px rgba(251, 191, 36, 0.22);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: finaleCardPop 1.2s var(--ease-spring) forwards;
+}
+
+@keyframes finaleCardPop {
+  0% { opacity: 0; transform: scale(0.85) translateY(30px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Small Rounded Pill Badge with Orange Text */
+.finale-pill-badge {
+  display: inline-block;
+  padding: 6px 18px;
+  background: rgba(249, 115, 22, 0.12);
+  border: 1.5px solid #f97316;
+  border-radius: 50px;
+  color: #fb923c;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  box-shadow: 0 0 15px rgba(249, 115, 22, 0.3);
+}
+
+/* Massive Elegant Heading in Serif with Subtle Pinkish-Peach Gradient */
+.finale-massive-heading {
+  font-family: var(--font-serif);
+  font-size: clamp(3rem, 9vw, 5.8rem);
+  font-weight: 800;
+  line-height: 1.05;
+  background: linear-gradient(135deg, #ffffff 0%, #fecdd3 45%, #fed7aa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 35px rgba(254, 205, 211, 0.6)) drop-shadow(0 0 70px rgba(236, 72, 153, 0.4));
+  margin-bottom: 10px;
+  animation: glowPulseTitle 3s infinite alternate ease-in-out;
+}
+
+@keyframes glowPulseTitle {
+  0% { filter: drop-shadow(0 0 25px rgba(254, 205, 211, 0.5)) drop-shadow(0 0 50px rgba(236, 72, 153, 0.3)); }
+  100% { filter: drop-shadow(0 0 45px rgba(254, 205, 211, 0.8)) drop-shadow(0 0 80px rgba(236, 72, 153, 0.6)); }
+}
+
+/* Pink Subheading */
+.finale-pink-subheading {
+  font-size: clamp(0.95rem, 2.5vw, 1.25rem);
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--hot-pink);
+  margin-bottom: 20px;
+  text-shadow: 0 0 15px rgba(236, 72, 153, 0.4);
+}
+
+.finale-paragraph-container {
+  margin-bottom: 20px;
+}
+
+.finale-love-paragraph {
+  font-family: var(--font-serif);
+  font-size: clamp(1rem, 2.2vw, 1.18rem);
+  line-height: 1.82;
+  color: #f3e8ff;
+  font-weight: 300;
+}
+
+.finale-signature-container {
+  margin-bottom: 22px;
+}
+
+/* Signature in Yellow/Gold Cursive Font */
+.finale-gold-signature {
+  font-family: var(--font-cursive);
+  font-size: clamp(1.6rem, 4vw, 2.1rem);
+  color: #fde047;
+  text-shadow: 0 0 16px rgba(253, 224, 71, 0.6);
+  font-weight: 600;
+}
+
+/* Glowing Warm-Gradient Pill Button */
+.relive-journey-pill-btn {
+  padding: 14px 36px;
+  background: linear-gradient(135deg, #fbbf24 0%, #f97316 50%, #ec4899 100%);
+  border: none;
+  border-radius: 50px;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(249, 115, 22, 0.45), 0 0 25px rgba(251, 191, 36, 0.35);
+  transition: all 0.3s var(--ease-spring);
+}
+
+.relive-journey-pill-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 15px 40px rgba(249, 115, 22, 0.6), 0 0 35px rgba(251, 191, 36, 0.5);
+}

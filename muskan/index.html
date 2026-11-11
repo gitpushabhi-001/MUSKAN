@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>For Muskan ❤️ | A Personalized Digital Gift</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Caveat:wght@600;700&family=Dancing+Script:wght@600;700&family=Fredoka:wght@600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Shrikhand&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet with cache-buster -->
+  <link rel="stylesheet" href="style.css?v=9">
+</head>
+<body>
+
+  <!-- Floating Audio Mute/Unmute Toggle -->
+  <button class="app-sound-btn" id="soundBtn" title="Toggle Romantic Music">
+    <div class="sound-waves">
+      <span></span><span></span><span></span>
+    </div>
+    <span class="sound-icon">🎵</span>
+  </button>
+
+  <audio id="appAudio" loop preload="auto">
+    <source src="assets/audio/romantic-piano.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Global Flash Overlay for Passcode Success -->
+  <div class="white-screen-flash hidden" id="screenFlash"></div>
+
+  <!-- Particle / FX Canvas for Cross-Screen Bursts -->
+  <canvas id="fx-canvas"></canvas>
+
+  <!-- ================================================================= -->
+  <!-- 📱 MAIN APP VIEWPORT (8 DISTINCT INTERACTIVE SCREENS) 📱 -->
+  <!-- ================================================================= -->
+  <div class="app-viewport" id="appViewport">
+
+    <!-- Screen Progress Bar (8 Steps) -->
+    <nav class="app-progress-bar" id="appProgress">
+      <span class="prog-dot active" data-step="1" title="Heart & Arrow"></span>
+      <span class="prog-dot" data-step="2" title="Tree of Love"></span>
+      <span class="prog-dot" data-step="3" title="Confession"></span>
+      <span class="prog-dot" data-step="4" title="Our Moments"></span>
+      <span class="prog-dot" data-step="5" title="The Letters"></span>
+      <span class="prog-dot" data-step="6" title="Unlock Surprise"></span>
+      <span class="prog-dot" data-step="7" title="Cake Cutting"></span>
+      <span class="prog-dot" data-step="8" title="Grand Finale"></span>
+    </nav>
+
+    <!-- =============================================================== -->
+    <!-- SCREEN 1: THE INTERACTIVE HEART & ARROW -->
+    <!-- =============================================================== -->
+    <section id="screen-1" class="app-screen screen-1 active">
+      <div class="screen-content">
+
+        <!-- 3D Glossy Floating Pink Heart -->
+        <div class="heart-stage" id="heartStage">
+          <div class="heart-ambient-glow"></div>
+          <div class="glossy-heart" id="targetHeart">
+            <svg viewBox="0 0 120 120" class="heart-3d-svg">
+              <defs>
+                <radialGradient id="glossyGrad" cx="35%" cy="30%" r="70%">
+                  <stop offset="0%" stop-color="#ffffff"/>
+                  <stop offset="25%" stop-color="#f472b6"/>
+                  <stop offset="70%" stop-color="#db2777"/>
+                  <stop offset="100%" stop-color="#831843"/>
+                </radialGradient>
+                <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="6" result="blur"/>
+                  <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                </filter>
+              </defs>
+              <path d="M60 106 C60 106 14 74 14 42 C14 24 28 14 42 14 C51 14 57 19 60 25 C63 19 69 14 78 14 C92 14 106 24 106 42 C106 74 60 106 60 106 Z" 
+                    fill="url(#glossyGrad)" filter="url(#softGlow)"/>
+              <ellipse cx="40" cy="32" rx="14" ry="7" fill="#ffffff" opacity="0.5" transform="rotate(-30 40 32)"/>
+            </svg>
+            <div class="heart-initial">M</div>
+          </div>
+        </div>
+
+        <!-- Bow & Arrow Launcher Area -->
+        <div class="bow-area" id="bowArea">
+          <svg class="bow-svg-frame" id="bowSvgFrame" viewBox="0 0 280 140">
+            <line id="aimGuide" x1="140" y1="90" x2="140" y2="-400" stroke="rgba(219, 39, 119, 0.45)" stroke-dasharray="6,6" stroke-width="2.5" opacity="0"/>
+            <path id="bowArc" d="M 30 100 Q 140 50 250 100" fill="none" stroke="#f472b6" stroke-width="5" stroke-linecap="round"/>
+            <path id="bowStringPath" d="M 30 100 Q 140 100 250 100" fill="none" stroke="#ffffff" stroke-width="2.5"/>
+          </svg>
+
+          <div class="arrow-actor" id="arrowActor">
+            <div class="arrow-head"></div>
+            <div class="arrow-body"></div>
+            <div class="arrow-feather"></div>
+          </div>
+
+          <div class="pull-cue" id="pullCue">
+            <span class="cue-text" id="pullText">Pull & Release</span>
+            <span class="cue-arrow">↓</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =============================================================== -->
+    <!-- SCREEN 2: THE TREE OF LOVE (HEART-LEAF CANOPY) -->
+    <!-- =============================================================== -->
+    <section id="screen-2" class="app-screen screen-2">
+      <div class="screen-content tree-screen-content">
+
+        <!-- Whimsical Tree Container with Heart Leaves -->
+        <div class="tree-container" id="treeContainer">
+          <canvas id="heart-tree-canvas"></canvas>
+        </div>
+
+        <!-- Soft Romantic Typography -->
+        <div class="tree-typography" id="treeTypography">
+          <p class="fade-phrase phrase-1">made for you, by hand</p>
+          <p class="fade-phrase phrase-2">I love you</p>
+          <p class="fade-phrase phrase-3">and every ordinary day with you</p>
+          
+          <button class="screen-action-btn" id="treeNextBtn">
+            <span>For You →</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =============================================================== -->
+    <!-- SCREEN 3: THE CINEMATIC CONFESSION (DEEP MAGENTA / WINE) -->
+    <!-- =============================================================== -->
+    <section id="screen-3" class="app-screen screen-3">
+      <div class="screen-content confession-screen-content">
+
+        <div class="confession-wrapper">
+          <p class="confession-intro" id="confessionIntro">this one is for you...</p>
+          
+          <h1 class="sweeping-love" id="sweepingLove">
+            <span class="cursive-text">I Love You</span>
+          </h1>
+
+          <p class="confession-subtitle" id="confessionSub">More than words could ever hold.</p>
+
+          <button class="screen-action-btn wine-btn" id="confessionNextBtn">
+            <span>Our Memories →</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =============================================================== -->
+    <!-- SCREEN 4: THE PHOTO COLLAGE & PUZZLE (8 REAL PHOTOS) -->
+    <!-- =============================================================== -->
+    <section id="screen-4" class="app-screen screen-4">
+      <div class="screen-content collage-screen-content">
+
+        <div class="collage-header">
+          <span class="mini-tag">Memory Gallery</span>
+          <h2 class="screen-heading">Our Favorite Moments</h2>
+          <p class="collage-instruction" id="collageInstruction">Tap each polaroid to unlock our memories!</p>
+        </div>
+
+        <!-- Dynamic Polaroid Cards Grid Stage -->
+        <div class="polaroids-stage" id="polaroidsStage"></div>
+
+        <!-- Bottom Action Bar -->
+        <div class="collage-footer">
+          <button class="reveal-all-btn" id="revealAllBtn">
+            <span>✨ Turn All Over</span>
+          </button>
+          <button class="screen-action-btn primary-glow-btn hidden" id="toLettersBtn">
+            <span>Read My Letter →</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =============================================================== -->
+    <!-- SCREEN 5: THE LETTER & SURPRISE UNLOCK (THE BRIDGE SCREEN) -->
+    <!-- =============================================================== -->
+    <section id="screen-5" class="app-screen screen-5">
+      <div class="screen-content letters-screen-content">
+
+        <!-- Card Header: Just above the white card -->
+        <div class="letter-top-badge">A LETTER FOR MUSKAN</div>
+
+        <!-- Floating White Card UI with Soft Drop Shadow -->
+        <div class="letters-card-viewport">
+          <!-- Subtitle at the top inside card -->
+          <div class="letter-badge-step" id="letterStepBadge">PARAGRAPH 1 OF 3</div>
+          
+          <!-- Romantic Paragraph Text -->
+          <div class="letter-text-wrapper">
+            <p class="letter-text-body" id="letterTextBody"></p>
+          </div>
+
+          <!-- Card Navigation: INSIDE the bottom of the white card -->
+          <div class="letter-navigation">
+            <button class="letter-nav-arrow" id="letterPrev" aria-label="Previous Paragraph">‹</button>
+            <div class="letter-dots" id="letterDots"></div>
+            <button class="letter-nav-arrow" id="letterNext" aria-label="Next Paragraph">›</button>
+          </div>
+        </div>
+
+        <!-- Signature & Button (The Bridge): Just below the white card -->
+        <div class="bridge-footer-wrap">
+          <p class="signature-red-cursive" id="signoffQuote">Forever yours, with all my heart ❤️</p>
+          <button class="screen-action-btn purple-pill-btn" id="toPasscodeBtn">
+            <span>Unlock Secret Surprise 🔓 →</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =============================================================== -->
+    <!-- SCREEN 6: THE "UNLOCK FOR SURPRISE" PASSCODE PAGE (PIN 1210) -->
+    <!-- =============================================================== -->
+    <section id="screen-6" class="app-screen screen-6">
+      <div class="screen-content passcode-screen-content">
+
+        <div class="passcode-layout">
+          
+          <!-- Left Side (Photo Frame & Heading) -->
+          <div class="passcode-left-col">
+            <h1 class="retro-unlock-title">unlock for surprise</h1>
+            
+            <!-- Circular Scalloped (Wavy-Edged) Picture Frame -->
+            <div class="scalloped-frame-wrapper">
+              <div class="scalloped-edge-border">
+                <div class="scalloped-photo-inner">
+                  <img src="assets/images/passcode_couple.jpg" alt="Muskan & You" class="scalloped-img">
+                </div>
+              </div>
+            </div>
+
+            <!-- Cute Vintage Party Mascot Graphic -->
+            <div class="vintage-mascot">
+              <div class="party-cat-icon">🐱🎉</div>
+              <span class="mascot-badge">Top Secret Birthday File</span>
+            </div>
+          </div>
+
+          <!-- Right Side (Digital Keypad & Inputs) -->
+          <div class="passcode-right-col">
+            
+            <!-- 4 Square Input Boxes -->
+            <div class="pin-display-row" id="pinDisplayRow">
+              <div class="pin-box" id="pinBox0"></div>
+              <div class="pin-box" id="pinBox1"></div>
+              <div class="pin-box" id="pinBox2"></div>
+              <div class="pin-box" id="pinBox3"></div>
+            </div>
+
+            <!-- Stylized Digital Number Pad with Wavy Purple Border -->
+            <div class="wavy-keypad-card" id="keypadCard">
+              <div class="keypad-grid">
+                <button class="keypad-key" data-key="1">1</button>
+                <button class="keypad-key" data-key="2">2</button>
+                <button class="keypad-key" data-key="3">3</button>
+
+                <button class="keypad-key" data-key="4">4</button>
+                <button class="keypad-key" data-key="5">5</button>
+                <button class="keypad-key" data-key="6">6</button>
+
+                <button class="keypad-key" data-key="7">7</button>
+                <button class="keypad-key" data-key="8">8</button>
+                <button class="keypad-key" data-key="9">9</button>
+
+                <button class="keypad-key key-symbol" data-key="*">*</button>
+                <button class="keypad-key" data-key="0">0</button>
+                <button class="keypad-key key-symbol" data-key="#">#</button>
+              </div>
+
+              <!-- Keypad Action Buttons -->
+              <div class="keypad-action-row">
+                <button class="keypad-action-btn delete-btn" id="keypadBackspace" title="Backspace">⌫ Delete</button>
+                <button class="keypad-action-btn enter-btn" id="keypadEnter" title="Enter PIN">Enter 🔓</button>
+              </div>
+            </div>
+
+            <p class="passcode-hint-text">Enter our secret 4-digit code (1210)</p>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =============================================================== -->
+    <!-- SCREEN 7: THE CAKE CUTTING EXPERIENCE (SLICE TO REVEAL) -->
+    <!-- =============================================================== -->
+    <section id="screen-7" class="app-screen screen-7">
+      <div class="screen-content cake-cutting-content">
+
+        <div class="cake-cut-header">
+          <div class="mini-tag">A Birthday Tradition</div>
+          <h1 class="cake-cut-title" id="cakeCutTitle">Time To Cut The Cake 🎂</h1>
+          <p class="cake-cut-hint" id="cakeCutHint">Swipe across the cake with your knife to cut the birthday slice!</p>
+        </div>
+
+        <!-- Interactive Cake Container -->
+        <div class="cake-interactive-stage" id="cakeInteractiveStage">
+          
+          <!-- Virtual Cake Knife Follower for Desktop -->
+          <div class="virtual-knife-cursor" id="virtualKnife">
+            <span class="knife-emoji">🔪</span>
+          </div>
+
+          <div class="cake-cutting-wrap" id="cakeCuttingWrap">
+            
+            <!-- Slice Guideline -->
+            <div class="slice-guideline" id="sliceGuideline">
+              <span class="slice-laser"></span>
+            </div>
+
+            <!-- Cake Plate -->
+            <div class="cake-cut-plate"></div>
+
+            <!-- Tier 3 (Bottom Tier) -->
+            <div class="cake-cut-tier tier-3">
+              <div class="frosting-strip"></div>
+              <div class="pearl-garland">
+                <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+
+            <!-- Tier 2 (Middle Tier) -->
+            <div class="cake-cut-tier tier-2">
+              <div class="frosting-drips">
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+
+            <!-- Tier 1 (Top Tier with Slice Effect) -->
+            <div class="cake-cut-tier tier-1" id="cakeTopTier">
+              <div class="fresh-strawberries">
+                <span>🍓</span><span>🍓</span><span>🍓</span>
+              </div>
+
+              <!-- Animated Candle -->
+              <div class="cake-candle-cluster">
+                <div class="cut-candle">
+                  <div class="cut-flame"><div class="cut-flame-core"></div><div class="cut-flame-halo"></div></div>
+                  <div class="cut-wick"></div>
+                  <div class="cut-candle-body"></div>
+                </div>
+              </div>
+
+              <!-- Cut Slice Piece that parts upon slicing -->
+              <div class="cut-slice-piece" id="cutSlicePiece"></div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Cutting Action Indicator & Cue -->
+        <div class="slice-prompt-bar" id="slicePromptBar">
+          <div class="slice-drag-hand">👆</div>
+          <span class="slice-prompt-text" id="slicePromptText">Swipe or Click across the cake to cut! ✨</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =============================================================== -->
+    <!-- SCREEN 8: THE GRAND FINALE (GLOWING LETTER) -->
+    <!-- =============================================================== -->
+    <section id="screen-8" class="app-screen screen-8">
+      
+      <!-- Dynamic Looping Fireworks & Lightning Background Canvas -->
+      <canvas id="fireworks-lightning-canvas"></canvas>
+
+      <div class="screen-content finale-screen-content">
+        
+        <!-- Large Dark Card with Subtle Warm Glowing Border -->
+        <div class="grand-finale-card">
+          
+          <!-- Small Rounded Pill Badge with Orange Text -->
+          <div class="finale-pill-badge" id="finalePillBadge">
+            A PROMISE WRITTEN IN THE STARS
+          </div>
+
+          <!-- Massive Elegant Serif Heading with Subtle Pinkish-Peach Gradient -->
+          <h1 class="finale-massive-heading" id="finaleMassiveHeading">
+            I LOVE YOU
+          </h1>
+
+          <!-- Pink Subheading -->
+          <h2 class="finale-pink-subheading" id="finalePinkSubheading">
+            HAPPY BIRTHDAY, MY MUSKAN ♥️
+          </h2>
+
+          <!-- Beautiful Love Paragraph -->
+          <div class="finale-paragraph-container">
+            <p class="finale-love-paragraph" id="finaleLoveParagraph">
+              Muskan, you are the most magical part of my entire universe. From every smile we share to every quiet moment together, loving you is the easiest, sweetest, and most wonderful feeling in the world. Today, the sky lights up with fireworks and lightning just to celebrate the day you arrived on this earth. Thank you for filling my days with warmth, laughter, and so much beauty. I promise to cherish you, protect your smile, and love you more and more with every passing day, today, tomorrow, and forever.
+            </p>
+          </div>
+
+          <!-- Signature in Yellow/Gold Cursive Font -->
+          <div class="finale-signature-container">
+            <p class="finale-gold-signature" id="finaleGoldSignature">
+              Always and forever yours ♥️
+            </p>
+          </div>
+
+          <!-- Glowing Warm-Gradient Pill Button -->
+          <button class="relive-journey-pill-btn" id="reliveJourneyBtn">
+            <span>Relive The Journey From The Start ↻</span>
+          </button>
+
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Fullscreen Photo Zoom Modal -->
+  <div class="photo-lightbox hidden" id="photoLightbox">
+    <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
+    <div class="lightbox-card">
+      <img src="" alt="" class="lightbox-img" id="lightboxImg">
+      <p class="lightbox-caption" id="lightboxCaption"></p>
+      <span class="lightbox-close" id="lightboxClose">✕</span>
+    </div>
+  </div>
+
+  <!-- Local Libraries -->
+  <script src="assets/js/gsap.min.js"></script>
+  <!-- App Configuration -->
+  <script src="config.js?v=9"></script>
+  <!-- Main Application Script -->
+  <script src="script.js?v=9"></script>
+</body>
+</html>
